@@ -22,18 +22,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //只获取一次soundID
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"2125" ofType:@"wav"];
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:path], &sound);
+    AudioServicesAddSystemSoundCompletion(sound, NULL, NULL, soundCompleteCallback, NULL);
     // Do any additional setup after loading the view, typically from a nib.
 
 }
 //开始响铃及振动
 -(IBAction)startShakeSound:(id)sender{
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"2125" ofType:@"wav"];
-    AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:path], &sound);
-    AudioServicesAddSystemSoundCompletion(sound, NULL, NULL, soundCompleteCallback, NULL);
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-    AudioServicesPlaySystemSound(sound);
     
+//    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+//    AudioServicesPlaySystemSound(sound);
+//    使用alertsound响铃震动
+    AudioServicesPlayAlertSound(sound);
     
     /**
      初始化计时器  每一秒振动一次
@@ -41,23 +44,23 @@
      @param playkSystemSound 振动方法
      @return
      */
-    _vibrationTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(playkSystemSound) userInfo:nil repeats:YES];
+//    _vibrationTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(playkSystemSound) userInfo:nil repeats:YES];
 }
 //振动
-- (void)playkSystemSound{
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-}
+//- (void)playkSystemSound{
+//    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+//}
 //停止响铃及振动
 -(IBAction)stopShakeSound:(id)sender{
     
-    [_vibrationTimer invalidate];
+//    [_vibrationTimer invalidate];
     AudioServicesRemoveSystemSoundCompletion(sound);
     AudioServicesDisposeSystemSoundID(sound);
     
 }
 //响铃回调方法
 void soundCompleteCallback(SystemSoundID sound,void * clientData) {
-    AudioServicesPlaySystemSound(sound);
+    AudioServicesPlayAlertSound(sound);
 }
 
 
