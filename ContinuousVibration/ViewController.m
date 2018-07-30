@@ -31,7 +31,11 @@
 }
 //开始响铃及振动
 -(IBAction)startShakeSound:(id)sender{
-    
+    if (sound == 0) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"2125" ofType:@"wav"];
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:path], &sound);
+        AudioServicesAddSystemSoundCompletion(sound, NULL, NULL, soundCompleteCallback, NULL);
+    }
     
 //    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 //    AudioServicesPlaySystemSound(sound);
@@ -56,6 +60,7 @@
 //    [_vibrationTimer invalidate];
     AudioServicesRemoveSystemSoundCompletion(sound);
     AudioServicesDisposeSystemSoundID(sound);
+    sound=0;
     
 }
 //响铃回调方法
